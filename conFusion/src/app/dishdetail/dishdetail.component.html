@@ -41,15 +41,53 @@
               <mat-list-item *ngFor="let comment of dish.comments">
                   <p matLine>{{comment.comment}}</p>
                   <p matLine>{{comment.rating}} Stars</p>
-                  <p matLine>--{{comment.author}} {{comment.date | date}}</p>
+                  <p matLine>-- {{comment.author}} {{comment.date | date}}</p>
               </mat-list-item>
+                <mat-list-item *ngIf="feedbackForm.valid" >
+                    <p matLine> {{feedbackForm.value.author}} </p>
+                    <p matLine> {{feedbackForm.value.rating}} Stars </p>
+                    <p matLine> -- {{feedbackForm.value.comment}} </p>
+                </mat-list-item>
+          <form novalidate [formGroup]="feedbackForm" #fform="ngForm" (ngSubmit)="onSubmit()" >
+            
+        <p>
+            <mat-form-field>
+                <input matInput formControlName="author" placeholder="Author" type="text" required>
+                <mat-error *ngIf="formErrors.author">
+                 {{ formErrors.author }}
+                </mat-error>
+            </mat-form-field>
+        </p>
+        <p>
+                <mat-slider matInput formControlName="rating" min="1" max="5" value="5" thumbLabel tickInterval="1"></mat-slider>   
+
+        </p>
+        <p>
+            <mat-form-field>
+                <input matInput formControlName="comment" placeholder="Comment" type="text" required>
+                <mat-error *ngIf="formErrors.comment">
+                 {{ formErrors.comment }}
+                </mat-error>
+            </mat-form-field> 
+        </p>
+        <button type="submit" class="background-primary text-floral-white" [disabled]="feedbackForm.invalid">
+              Submit
+        </button>
+        </form>
 
       </mat-list>
+
+      
   </div>
 
-    <div fxFlex [hidden]="dish">
+
+
+    <!--<div fxFlex [hidden]="dish">
         <mat-spinner></mat-spinner>
         <h4>Loading . . . Please Wait</h4>
-    </div>
+    </div>-->
+    
+    
+    
 
 </div>
