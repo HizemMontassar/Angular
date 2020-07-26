@@ -24,6 +24,9 @@ export class DishdetailComponent implements OnInit {
     next: string;
     feedback: Comment;
     feedbackForm: FormGroup;
+    @ViewChild('fform') feedbackFormDirective;
+    comment: Comment;
+    dishcopy: Dish;
     
   constructor(private dishService: DishService ,private route: ActivatedRoute, private location: Location, private fb: FormBuilder,@Inject('BaseURL') private BaseURL) {
     this.createForm();
@@ -78,18 +81,37 @@ export class DishdetailComponent implements OnInit {
     }
     
     onSubmit(){
-        const submitedComment: Comment = {
+        /*const submitedComment: Comment = {
             author: this.feedbackForm.value.author,
             rating: this.feedbackForm.value.rating,
             comment: this.feedbackForm.value.comment,
             date: new Date().toISOString(),
         };
                 
-        this.dish.comments.push(submitedComment);     
+        this.dishcopy.comments.push(submitedComment);
+        this.dishService.putDish(this.dishcopy).subscribe(dish => {
+            this.dish = dish;
+            this.dishcopy = dish;
+        },
+        errmess => { this.dish = null; this.dishcopy = null; this.errMess = <any>errmess; } );
         
         this.feedbackForm.reset({
             author: '',
             rating: 5,
+            comment: ''
+        });*/
+        this.comment = this.feedbackForm.value;
+        this.comment.date = new Date().toISOString();
+        console.log(this.comment);
+        this.dishcopy.comments.push(this.comment);
+        this.dishService.putDish(this.dishcopy).subscribe(dish => {
+            this.dish= dish; this.dishcopy = dish;
+        },
+        errmess => { this.dish = null;this.dishcopy = null ; this.errMess = <any>errmess ;});
+        this.feedbackFormDirective.resetForm();
+        this.feedbackForm.reset({
+            author: '',
+            rating:5,
             comment: ''
         });
 
@@ -98,7 +120,7 @@ export class DishdetailComponent implements OnInit {
   ngOnInit() {
       this.dishService.getDishIds().subscribe((dishIds) => this.dishIds = dishIds);
       this.route.params.pipe(switchMap((params: Params) => this.dishService.getDish(params['id'])))
-      .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); },
+      .subscribe(dish => { this.dish = dish; this.dishcopy = dish;this.setPrevNext(dish.id); },
         errmess => this.errMess = <any>errmess);
   }
     
