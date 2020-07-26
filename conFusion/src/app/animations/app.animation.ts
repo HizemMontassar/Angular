@@ -38,7 +38,7 @@ export function expand(){
        state('*', style({
            opacity: 1,
            transform: 'translateX(0)'
-       })) 
+       })), 
         transition(':enter',[
          style({
             transform: 'trnaslateX(-50%)',
